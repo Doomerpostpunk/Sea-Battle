@@ -2,22 +2,33 @@
 display: grid;
     grid-template-columns: repeat(10,40px);
     grid-template-rows:repeat(10,40px);
-
+border:1px solid black;
 }
-#app{
-   display: flex;
-    column-gap: 50px;
-    justify-content:center;
 
-}
 .game-item{
 
     border:1px solid black;
 }
 .dd{
-  margin-bottom: 10px;
+
     border:1px solid black;
-    background: red;
-    width: 38px;
-    height: 38px;
+    background: black;
+    width: 36px;
+    height: 36px;
+
+}
+.hitShip{
+    background: black;
+}
+.main-div{
+    display: flex;
+    column-gap: 50px;
+    justify-content:center;
+margin-bottom: 100px;
+}
+.dd2{
+    width: 72px;
+    height: 36px;
+    border:1px solid black;
+    background: black;
 }
