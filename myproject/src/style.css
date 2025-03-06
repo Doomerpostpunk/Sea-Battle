@@ -9,26 +9,34 @@ border:1px solid black;
 
     border:1px solid black;
 }
-.dd{
+.ship{
 
     border:1px solid black;
     background: black;
     width: 36px;
     height: 36px;
+margin-bottom: 20px;
+}
 
-}
-.hitShip{
-    background: black;
-}
 .main-div{
     display: flex;
     column-gap: 50px;
     justify-content:center;
 margin-bottom: 100px;
 }
-.dd2{
+.ship[data-length="1"] {
+    width: 36px;
+    background-color: blue;
+}
+.ship[data-length="2"] {
     width: 72px;
-    height: 36px;
-    border:1px solid black;
-    background: black;
+    background-color: blue;
+}
+.ship[data-length="3"] {
+    width: 108px;
+    background-color: blue;
+}
+.ship[data-length="4"] {
+    width: 144px;
+    background-color: blue;
 }
