@@ -4,6 +4,7 @@ import { shipList2 } from "./utils/shiplist.js";
 const app = document.getElementById("app");
 const boardList = Array.from({ length: 100 }, (_, index) => index + 1);
 const shipList = new Map();
+
 window.addEventListener("storage", () => {
   console.log(localStorage.getItem("ship"));
 });
@@ -35,23 +36,15 @@ const ships = createElement({
   },
 });
 
-shipList2.forEach((ship) => {
-  ships.appendChild(`<div>${JSON.stringify(ship)}</div>`);
+shipList2.forEach((div) => {
+  div.addEventListener("dragstart", (e) => (dragged = e.target));
+  ships.appendChild(div);
 });
 
 app.appendChild(ships);
 
 let dragged = null;
-elem.addEventListener("dragstart", (e) => (dragged = e.target));
-elem2.addEventListener("dragstart", (e) => (dragged = e.target));
-elem3.addEventListener("dragstart", (e) => (dragged = e.target));
-elem4.addEventListener("dragstart", (e) => (dragged = e.target));
-elem5.addEventListener("dragstart", (e) => (dragged = e.target));
-elem6.addEventListener("dragstart", (e) => (dragged = e.target));
-elem7.addEventListener("dragstart", (e) => (dragged = e.target));
-elem8.addEventListener("dragstart", (e) => (dragged = e.target));
-elem9.addEventListener("dragstart", (e) => (dragged = e.target));
-elem10.addEventListener("dragstart", (e) => (dragged = e.target));
+
 gameBoard_1.addEventListener("dragover", (e) => e.preventDefault());
 
 gameBoard_1.addEventListener("drop", (e) => {
@@ -64,16 +57,38 @@ gameBoard_1.addEventListener("drop", (e) => {
     const shipLength = parseInt(dragged.getAttribute("data-length"));
     let startIndex = Array.from(gameBoard_1.children).indexOf(cell);
     let canPlace = true;
+
     for (let i = 0; i < shipLength; i++) {
       const nextCell = gameBoard_1.children[startIndex + i];
       if (
         !nextCell ||
         !nextCell.classList.contains("game-item") ||
-        shipList.has(e.target.id)
+        shipList.has(nextCell.id)
       ) {
         canPlace = false;
         break;
       }
+    }
+
+    // Проверка соседних клеток с учетом пропуска одной клетки
+    for (let i = -1; i <= shipLength; i++) {
+      const cellsToCheck = [
+        startIndex + i, // Слева
+        startIndex + i, // Справа
+        startIndex - 10 + i, // Сверху
+        startIndex + 10 + i, // Снизу
+      ];
+
+      cellsToCheck.forEach((index) => {
+        const neighborCell = gameBoard_1.children[index];
+        if (
+          neighborCell &&
+          (!neighborCell.classList.contains("game-item") ||
+            shipList.has(neighborCell.id))
+        ) {
+          canPlace = false;
+        }
+      });
     }
 
     if (canPlace) {
@@ -82,10 +97,7 @@ gameBoard_1.addEventListener("drop", (e) => {
         nextCell.style.backgroundColor = "#007bff";
         nextCell.textContent = dragged.getAttribute("data-length");
         shipList.set(nextCell.id, obj);
-        dragged.setAttribute("id", e.target.id);
-        e.target.appendChild(dragged);
       }
-
       dragged.parentNode.removeChild(dragged);
     }
   }
