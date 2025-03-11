@@ -87,6 +87,7 @@ gameBoard_1.addEventListener("drop", (e) => {
             shipList.has(neighborCell.id))
         ) {
           canPlace = false;
+          const c = 1;
         }
       });
     }
