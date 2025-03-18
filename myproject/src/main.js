@@ -1,17 +1,19 @@
 import "./style.css";
 import { createElement } from "./utils/createEl.js";
 import { shipList2 } from "./utils/shiplist.js";
+import { leftBorder } from "./utils/borders.js";
+import { rightBorder } from "./utils/borders.js";
+import { canPlaceShip } from "./utils/checking.js";
+import { getNeighbors } from "./utils/neighbors.js";
 const app = document.getElementById("app");
 const boardList = Array.from({ length: 100 }, (_, index) => index + 1);
 const shipList = new Map();
-
-window.addEventListener("storage", () => {
-  console.log(localStorage.getItem("ship"));
-});
 const boardList2 = Array.from({ length: 100 });
 const main_div = createElement({ elem: "div", className: "main-div" });
 const gameBoard_1 = createElement({ elem: "div", className: "game-board" });
 const gameBoard_2 = createElement({ elem: "div", className: "game-board" });
+const arr = [];
+let numbers = 20;
 boardList.forEach((el) => {
   const item = createElement({
     elem: "div",
@@ -30,6 +32,7 @@ app.appendChild(main_div);
 
 const ships = createElement({
   elem: "div",
+  className: "ships",
   atr: {
     type: "id",
     name: "ships",
@@ -53,51 +56,47 @@ gameBoard_1.addEventListener("drop", (e) => {
   };
 
   const cell = e.target;
+
   if (cell.classList.contains("game-item") && dragged) {
     const shipLength = parseInt(dragged.getAttribute("data-length"));
     let startIndex = Array.from(gameBoard_1.children).indexOf(cell);
     let canPlace = true;
 
-    for (let i = 0; i < shipLength; i++) {
-      const nextCell = gameBoard_1.children[startIndex + i];
-      if (
-        !nextCell ||
-        !nextCell.classList.contains("game-item") ||
-        shipList.has(nextCell.id)
-      ) {
-        canPlace = false;
-        break;
+    if ((startIndex % 10) + shipLength > 10) {
+      canPlace = false;
+    } else {
+      for (let i = 0; i < shipLength; i++) {
+        const nextCell = gameBoard_1.children[startIndex + i];
+        if (
+          !nextCell ||
+          !nextCell.classList.contains("game-item") ||
+          shipList.has(nextCell.id)
+        ) {
+          canPlace = false;
+          break;
+        }
       }
     }
 
-    // Проверка соседних клеток с учетом пропуска одной клетки
-    for (let i = -1; i <= shipLength; i++) {
-      const cellsToCheck = [
-        startIndex + i, // Слева
-        startIndex + i, // Справа
-        startIndex - 10 + i, // Сверху
-        startIndex + 10 + i, // Снизу
-      ];
+    for (let i = 0; i < shipLength; i++) {
+      let currentCell = startIndex + i;
+      const isLeftBorder = leftBorder.includes(currentCell + 1);
+      const isRightBorder = rightBorder.includes(currentCell + 1);
 
-      cellsToCheck.forEach((index) => {
-        const neighborCell = gameBoard_1.children[index];
-        if (
-          neighborCell &&
-          (!neighborCell.classList.contains("game-item") ||
-            shipList.has(neighborCell.id))
-        ) {
-          canPlace = false;
-          const c = 1;
-        }
-      });
+      const neighbors = getNeighbors(currentCell, isLeftBorder, isRightBorder);
+
+      if (!canPlaceShip(neighbors, gameBoard_1, shipList)) {
+        canPlace = false;
+      }
     }
-
     if (canPlace) {
       for (let i = 0; i < shipLength; i++) {
         const nextCell = gameBoard_1.children[startIndex + i];
-        nextCell.style.backgroundColor = "#007bff";
+        nextCell.classList.toggle("activeCell");
         nextCell.textContent = dragged.getAttribute("data-length");
         shipList.set(nextCell.id, obj);
+        arr.push(nextCell.id);
+        console.log(arr);
       }
       dragged.parentNode.removeChild(dragged);
     }
@@ -106,8 +105,16 @@ gameBoard_1.addEventListener("drop", (e) => {
 gameBoard_1.addEventListener("click", (event) => {
   console.log(event.target.id);
 
-  if (shipList.has(event.target.id)) {
+  if (
+    shipList.has(event.target.id) &&
+    event.target.style.backgroundColor !== "green"
+  ) {
     event.target.style.backgroundColor = "green";
+    numbers = numbers - 1;
+    console.log(numbers);
+  }
+  if (numbers === 0) {
+    alert("Defeat");
   }
 });
 

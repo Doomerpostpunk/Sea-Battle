@@ -4,18 +4,22 @@
     grid-template-rows:repeat(10,40px);
     border:1px solid black;
 }
-
+body{
+    background: black;
+  color: white;
+}
 .game-item{
 
-    border:1px solid black;
+    border:1px solid #870e0e;
 }
 .ship{
-
-    border:1px solid black;
+text-align: center;
+    font-size: 30px;
+    border:1px solid #8f1d1d;
     background: black;
     width: 36px;
     height: 36px;
-    margin-bottom: 20px;
+    margin-left: 50px;
 }
 
 .main-div{
@@ -26,17 +30,26 @@
 }
 .ship[data-length="1"] {
     width: 36px;
-    background-color: blue;
+    background-color: #007bff
 }
 .ship[data-length="2"] {
-    width: 72px;
-    background-color: blue;
+    width: 79px;
+    background-color: #007bff
 }
 .ship[data-length="3"] {
-    width: 108px;
-    background-color: blue;
+    width: 115px;
+    background-color: #007bff
 }
 .ship[data-length="4"] {
-    width: 144px;
-    background-color: blue;
+    width: 154px;
+    background-color: #007bff
+}
+.ships{
+    display: flex;
+
+}
+.activeCell{
+    background: #007bff;
+    font-size: 30px;
+    text-align: center;
 }
