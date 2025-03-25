@@ -53,3 +53,8 @@ text-align: center;
     font-size: 30px;
     text-align: center;
 }
+.occupied{
+    background: #007bff;
+    font-size: 30px;
+    text-align: center;
+}
