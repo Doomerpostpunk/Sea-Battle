@@ -3,42 +3,35 @@ import { createElement } from "./utils/createEl.js";
 import { shipList2 } from "./utils/shiplist.js";
 import { leftBorder } from "./utils/borders.js";
 import { rightBorder } from "./utils/borders.js";
-import { canPlaceShip } from "./utils/checking.js";
+import { canPlaceShip } from "./utils/checkingFreePlace.js";
 import { getNeighbors } from "./utils/neighbors.js";
+import { startGame } from "./utils/startGame.js";
+import { createBoard } from "./utils/createGameboard.js";
+import { ships } from "./utils/shiplist.js";
+import { checkDeployedShips } from "./utils/checkDeployedShips.js";
+import { placeRandomShips } from "./utils/placeRandomShips.js";
+import { uniqFromArray, uniqueRandomNum } from "./utils/uniqRandomNumbers.js";
+import { uniqArr } from "./utils/uniqRandomNumbers.js";
+import { setupHumanPlayerTurn } from "./utils/humPlayerTurn.js";
 const app = document.getElementById("app");
-const boardList = Array.from({ length: 100 }, (_, index) => index + 1);
+const boardList = Array.from({ length: 100 }, (_, index) => index);
 const shipList = new Map();
-const boardList2 = Array.from({ length: 100 });
+const boardList2 = Array.from({ length: 100 }, (_, index) => index);
 const main_div = createElement({ elem: "div", className: "main-div" });
 const gameBoard_1 = createElement({ elem: "div", className: "game-board" });
-const gameBoard_2 = createElement({ elem: "div", className: "game-board" });
-const arr = [];
-const arr2 = Array(100).fill(false);
-let numbers = 20;
-boardList.forEach((el) => {
-  const item = createElement({
-    elem: "div",
-    className: "game-item",
-    atr: { name: "id", type: el },
-  });
-  gameBoard_1.appendChild(item);
-});
-boardList2.forEach(() => {
-  const item = createElement({ elem: "div", className: "game-item" });
-  gameBoard_2.appendChild(item);
-});
-main_div.appendChild(gameBoard_1);
-main_div.appendChild(gameBoard_2);
-app.appendChild(main_div);
-
-const ships = createElement({
+const gameBoard_2 = createElement({
   elem: "div",
-  className: "ships",
-  atr: {
-    type: "id",
-    name: "ships",
-  },
+  className: "game-board",
 });
+const cellsList = [];
+let humanShips = 20;
+let aiShips = 20;
+let player = "hum";
+const arr2 = Array.from({ length: 100 }).fill(false);
+let dragged = null;
+main_div.appendChild(createBoard(boardList, gameBoard_1));
+main_div.appendChild(createBoard(boardList2, gameBoard_2));
+app.appendChild(main_div);
 
 shipList2.forEach((div) => {
   div.addEventListener("dragstart", (e) => (dragged = e.target));
@@ -46,8 +39,6 @@ shipList2.forEach((div) => {
 });
 
 app.appendChild(ships);
-
-let dragged = null;
 
 gameBoard_1.addEventListener("dragover", (e) => e.preventDefault());
 
@@ -96,83 +87,119 @@ gameBoard_1.addEventListener("drop", (e) => {
         nextCell.classList.toggle("activeCell");
         nextCell.textContent = dragged.getAttribute("data-length");
         shipList.set(nextCell.id, obj);
-        arr.push(nextCell.id);
-        console.log(arr);
+        cellsList.push(Number(nextCell.id));
+        checkDeployedShips();
       }
       dragged.parentNode.removeChild(dragged);
     }
   }
 });
-gameBoard_1.addEventListener("click", (event) => {
-  console.log(event.target.id);
 
-  if (
-    shipList.has(event.target.id) &&
-    event.target.style.backgroundColor !== "green"
-  ) {
-    event.target.style.backgroundColor = "green";
-    numbers = numbers - 1;
-    console.log(numbers);
-  }
-  if (numbers === 0) {
-    alert("Defeat");
+placeRandomShips(arr2, gameBoard_2);
+app.appendChild(ships);
+app.appendChild(startGame);
+// startGame.addEventListener("click", () => {
+//   startGame.style.display = "none";
+//   if (player === "hum") {
+//     let click = false;
+//     gameBoard_2.addEventListener("click", (event) => {
+//       if (!click) {
+//         if (
+//           arr2[Number(event.target.id)] &&
+//           event.target.style.backgroundColor !== "green"
+//         ) {
+//           event.target.style.backgroundColor = "green";
+//           event.target.style.fontSize = "30px";
+//           aiShips = aiShips - 1;
+//           console.log({ numbers2: aiShips });
+//         }
+//         click = true;
+//         if (aiShips === 0) {
+//           alert("Defeat AI");
+//         } else {
+//           click = false;
+//           player = "ai";
+//           aiMove(cellsList);
+//         }
+//       }
+//     });
+//   }
+// });
+
+startGame.addEventListener("click", () => {
+  startGame.style.display = "none";
+  if (player === "hum") {
+    setupHumanPlayerTurn({
+      gameBoard_2,
+      arr2,
+      aiShips,
+      player,
+      callback: aiMove(cellsList),
+    });
   }
 });
 
-const canRandPlace = (id, length) => {
-  for (let i = 0; i < length; i++) {
-    const index = id + i;
-    if (index >= 100 || arr2[index] || (id % 10) + length > 10) return false;
+const aiMove = (shipList, neighborCellsArr = []) => {
+  console.log({ neighborCellsArr });
+  if (neighborCellsArr.length) {
+    console.log({ neighborCellsArr });
+    const randomNumber = uniqFromArray(neighborCellsArr);
 
-    const neighbors = [
-      index - 1,
-      index + 1,
-      index - 10,
-      index + 10,
-      index - 11,
-      index - 9,
-      index + 9,
-      index + 11,
-    ];
-    for (const neighbor of neighbors) {
-      if (neighbor >= 0 && neighbor < 100 && arr2[neighbor]) {
-        return false;
+    if (!randomNumber) {
+      console.log("Нет доступных соседей для выбора.");
+      return;
+    }
+    console.log({ randomNumber });
+    if (shipList.includes(randomNumber)) {
+      humanShips = humanShips - 1;
+      console.log("humships", humanShips);
+      if (humanShips === 0) {
+        alert("Defeat Human");
       }
+      gameBoard_1.children[randomNumber].style.backgroundColor = "red";
+      neighborCellsArr = neighborCellsArr.filter(
+        (number) => number !== randomNumber,
+      );
+
+      const modifiedShipList = (ships) => {
+        return ships.map((shipCell) => {
+          return shipCell + 1;
+        });
+      };
+      aiMove(shipList, modifiedShipList(neighborCellsArr));
+      return;
+    }
+    neighborCellsArr = neighborCellsArr.filter(
+      (number) => number !== randomNumber,
+    );
+    aiMove(shipList, neighborCellsArr);
+    return;
+  }
+
+  const randCell = uniqueRandomNum(uniqArr);
+  console.log("randcell", randCell);
+  gameBoard_1.children[randCell].style.backgroundColor = "green";
+  if (shipList.includes(randCell)) {
+    humanShips = humanShips - 1;
+    console.log("humships", humanShips);
+    if (humanShips === 0) {
+      alert("Defeat Human");
+    }
+    gameBoard_1.children[randCell].style.backgroundColor = "red";
+    if (
+      shipList.includes(randCell - 1) ||
+      shipList.includes(randCell + 1) ||
+      shipList.includes(randCell - 10) ||
+      shipList.includes(randCell + 10)
+    ) {
+      neighborCellsArr.push(randCell - 1);
+      neighborCellsArr.push(randCell + 1);
+      neighborCellsArr.push(randCell + 10);
+      neighborCellsArr.push(randCell - 10);
+      console.log(neighborCellsArr);
+      aiMove(shipList, neighborCellsArr);
     }
   }
-  return true;
-};
-const randPlace = (id, length) => {
-  if (canRandPlace(id, length)) {
-    for (let i = 0; i < length; i++) {
-      const index = id + i;
-      arr2[index] = true;
-      const item = gameBoard_2.children[index];
-      item.classList.add("occupied");
-      item.innerText = length;
-    }
-    return true;
-  }
-  return false;
-};
 
-const placeRandomShips = () => {
-  const ships = [
-    { length: 4, count: 1 },
-    { length: 3, count: 2 },
-    { length: 2, count: 3 },
-    { length: 1, count: 4 },
-  ];
-
-  ships.forEach((ship) => {
-    for (let i = 0; i < ship.count; i++) {
-      let placed = false;
-      while (!placed) {
-        const startIndex = Math.floor(Math.random() * 100);
-        placed = randPlace(startIndex, ship.length);
-      }
-    }
-  });
+  player = "hum";
 };
-placeRandomShips();
-app.appendChild(ships);

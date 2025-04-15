@@ -46,7 +46,7 @@ text-align: center;
 }
 .ships{
     display: flex;
-
+margin-left: 220px;
 }
 .activeCell{
     background: #007bff;
@@ -55,6 +55,15 @@ text-align: center;
 }
 .occupied{
     background: #007bff;
-    font-size: 30px;
+    font-size: 0;
     text-align: center;
+}
+.startGame{
+    background: black;
+    color:#8f1d1d;
+   border:1px solid white;
+    font-size: 30px;
+    margin-left: 870px;
+    margin-top: 30px;
+display: block;
 }
