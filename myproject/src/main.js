@@ -13,6 +13,8 @@ import { placeRandomShips } from "./utils/placeRandomShips.js";
 import { uniqFromArray, uniqueRandomNum } from "./utils/uniqRandomNumbers.js";
 import { uniqArr } from "./utils/uniqRandomNumbers.js";
 import { setupHumanPlayerTurn } from "./utils/humPlayerTurn.js";
+import { cell } from "./utils/borders.js";
+import { basement } from "./utils/borders.js";
 const app = document.getElementById("app");
 const boardList = Array.from({ length: 100 }, (_, index) => index);
 const shipList = new Map();
@@ -41,7 +43,47 @@ shipList2.forEach((div) => {
 app.appendChild(ships);
 
 gameBoard_1.addEventListener("dragover", (e) => e.preventDefault());
+const canPlaceShipAt = (
+  startIndex,
+  shipLength,
+  gameBoardChildren,
+  shipList,
+  leftBorder,
+  rightBorder,
+) => {
+  // Проверка выхода за правую границу
+  if ((startIndex % 10) + shipLength > 10) {
+    return false;
+  }
 
+  // Проверка доступности клеток для размещения корабля
+  for (let i = 0; i < shipLength; i++) {
+    const nextCell = gameBoardChildren[startIndex + i];
+    if (
+      !nextCell ||
+      !nextCell.classList.contains("game-item") ||
+      shipList.has(nextCell.id)
+    ) {
+      return false;
+    }
+  }
+
+  // Проверка соседних клеток для каждого сегмента корабля
+  for (let i = 0; i < shipLength; i++) {
+    const currentCell = startIndex + i;
+    const isLeftBorder = leftBorder.includes(currentCell);
+    const isRightBorder = rightBorder.includes(currentCell);
+
+    const neighbors = getNeighbors(currentCell, isLeftBorder, isRightBorder);
+
+    if (!canPlaceShip(neighbors, gameBoardChildren, shipList)) {
+      return false;
+    }
+  }
+
+  // Если все проверки пройдены — можно разместить корабль
+  return true;
+};
 gameBoard_1.addEventListener("drop", (e) => {
   const obj = {
     cel: e.target.id,
@@ -72,8 +114,8 @@ gameBoard_1.addEventListener("drop", (e) => {
 
     for (let i = 0; i < shipLength; i++) {
       let currentCell = startIndex + i;
-      const isLeftBorder = leftBorder.includes(currentCell + 1);
-      const isRightBorder = rightBorder.includes(currentCell + 1);
+      const isLeftBorder = leftBorder.includes(currentCell);
+      const isRightBorder = rightBorder.includes(currentCell);
 
       const neighbors = getNeighbors(currentCell, isLeftBorder, isRightBorder);
 
@@ -98,33 +140,6 @@ gameBoard_1.addEventListener("drop", (e) => {
 placeRandomShips(arr2, gameBoard_2);
 app.appendChild(ships);
 app.appendChild(startGame);
-// startGame.addEventListener("click", () => {
-//   startGame.style.display = "none";
-//   if (player === "hum") {
-//     let click = false;
-//     gameBoard_2.addEventListener("click", (event) => {
-//       if (!click) {
-//         if (
-//           arr2[Number(event.target.id)] &&
-//           event.target.style.backgroundColor !== "green"
-//         ) {
-//           event.target.style.backgroundColor = "green";
-//           event.target.style.fontSize = "30px";
-//           aiShips = aiShips - 1;
-//           console.log({ numbers2: aiShips });
-//         }
-//         click = true;
-//         if (aiShips === 0) {
-//           alert("Defeat AI");
-//         } else {
-//           click = false;
-//           player = "ai";
-//           aiMove(cellsList);
-//         }
-//       }
-//     });
-//   }
-// });
 
 startGame.addEventListener("click", () => {
   startGame.style.display = "none";
@@ -134,7 +149,7 @@ startGame.addEventListener("click", () => {
       arr2,
       aiShips,
       player,
-      callback: aiMove(cellsList),
+      callback: () => aiMove(cellsList),
     });
   }
 });
@@ -177,6 +192,7 @@ const aiMove = (shipList, neighborCellsArr = []) => {
   }
 
   const randCell = uniqueRandomNum(uniqArr);
+  console.log(uniqArr.sort((a, b) => a - b));
   console.log("randcell", randCell);
   gameBoard_1.children[randCell].style.backgroundColor = "green";
   if (shipList.includes(randCell)) {
@@ -186,20 +202,40 @@ const aiMove = (shipList, neighborCellsArr = []) => {
       alert("Defeat Human");
     }
     gameBoard_1.children[randCell].style.backgroundColor = "red";
+    const neighbors = [
+      randCell - 1,
+      randCell + 1,
+      randCell - 10,
+      randCell + 10,
+    ];
+    const validNeighbors = neighbors.filter((n) => shipList.includes(n));
     if (
-      shipList.includes(randCell - 1) ||
-      shipList.includes(randCell + 1) ||
-      shipList.includes(randCell - 10) ||
-      shipList.includes(randCell + 10)
+      (cell.includes(randCell) && randCell !== 0) ||
+      (basement.includes(randCell) && randCell !== 99) ||
+      randCell === 0 ||
+      randCell === 99
     ) {
-      neighborCellsArr.push(randCell - 1);
-      neighborCellsArr.push(randCell + 1);
-      neighborCellsArr.push(randCell + 10);
-      neighborCellsArr.push(randCell - 10);
-      console.log(neighborCellsArr);
-      aiMove(shipList, neighborCellsArr);
+      let filteredNeighbors = [];
+
+      if (randCell === 0) {
+        filteredNeighbors = validNeighbors.filter(
+          (n) => n === randCell + 1 || n === randCell + 10,
+        );
+      } else if (randCell === 99) {
+        filteredNeighbors = validNeighbors.filter(
+          (n) => n === randCell - 1 || n === randCell - 10,
+        );
+      } else if (cell.includes(randCell) && randCell !== 0) {
+        filteredNeighbors = validNeighbors.filter((n) => n !== randCell - 10);
+      } else if (basement.includes(randCell) && randCell !== 99) {
+        filteredNeighbors = validNeighbors.filter((n) => n !== randCell + 10);
+      }
+      if (filteredNeighbors.length > 0) {
+        neighborCellsArr.push(...filteredNeighbors);
+        console.log(neighborCellsArr);
+        aiMove(shipList, neighborCellsArr);
+      }
     }
   }
-
   player = "hum";
 };
