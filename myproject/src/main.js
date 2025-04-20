@@ -1,6 +1,7 @@
 import "./style.css";
 import { createElement } from "./utils/createEl.js";
 import { shipList2 } from "./utils/shiplist.js";
+
 const app = document.getElementById("app");
 const boardList = Array.from({ length: 100 }, (_, index) => index + 1);
 const shipList = new Map();
@@ -51,8 +52,8 @@ gameBoard_1.addEventListener("drop", (e) => {
   const obj = {
     cel: e.target.id,
   };
-
   const cell = e.target;
+
   if (cell.classList.contains("game-item") && dragged) {
     const shipLength = parseInt(dragged.getAttribute("data-length"));
     let startIndex = Array.from(gameBoard_1.children).indexOf(cell);
@@ -70,28 +71,36 @@ gameBoard_1.addEventListener("drop", (e) => {
       }
     }
 
-    // Проверка соседних клеток с учетом пропуска одной клетки
-    for (let i = -1; i <= shipLength; i++) {
-      const cellsToCheck = [
-        startIndex + i, // Слева
-        startIndex + i, // Справа
-        startIndex - 10 + i, // Сверху
-        startIndex + 10 + i, // Снизу
+    // Проверка соседних клеток
+    for (let i = 0; i < shipLength; i++) {
+      let currentCell = startIndex + i;
+
+      console.log(currentCell);
+      const neighbors = [
+        currentCell - 1,
+        currentCell + 1,
+        currentCell - 10,
+        currentCell + 10,
+        currentCell - 11,
+        currentCell + 9,
+        currentCell - 9,
+        currentCell + 11,
       ];
 
-      cellsToCheck.forEach((index) => {
-        const neighborCell = gameBoard_1.children[index];
-        if (
-          neighborCell &&
-          (!neighborCell.classList.contains("game-item") ||
-            shipList.has(neighborCell.id))
-        ) {
-          canPlace = false;
-          const c = 1;
+      neighbors.forEach((index) => {
+        if (index >= 0 && index < gameBoard_1.children.length) {
+          const neighborCell = gameBoard_1.children[index];
+          if (
+            !neighborCell.classList.contains("game-item") ||
+            shipList.has(neighborCell.id)
+          ) {
+            canPlace = false;
+          }
         }
       });
     }
 
+    // Если можно разместить, размещаем корабль
     if (canPlace) {
       for (let i = 0; i < shipLength; i++) {
         const nextCell = gameBoard_1.children[startIndex + i];
