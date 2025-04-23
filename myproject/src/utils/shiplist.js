@@ -1,65 +1,3 @@
-// export const shipList2 = [
-//   {
-//     elem: "div",
-//     title: "1",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "1",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "1",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "1",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "2",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "2",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "2",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "3",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "3",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-//   {
-//     elem: "div",
-//     title: "4",
-//     className: "ship",
-//     atr: { name: "draggable", type: "true" },
-//   },
-// ];
 import { createElement } from "./createEl.js";
 const elem = createElement({
   elem: "div",
@@ -132,6 +70,16 @@ const elem10 = createElement({
   atr: { name: "draggable", type: "true" },
 });
 elem10.setAttribute("data-length", "4");
+
+export const ships = createElement({
+  elem: "div",
+  className: "ships",
+  atr: {
+    type: "id",
+    name: "ships",
+  },
+});
+
 export const shipList2 = [];
 shipList2.push(elem);
 shipList2.push(elem2);
@@ -143,3 +91,9 @@ shipList2.push(elem7);
 shipList2.push(elem8);
 shipList2.push(elem9);
 shipList2.push(elem10);
+//
+// export const draggedShips = () => {
+//   shipList2.forEach((div) => {
+//     div.addEventListener("dragstart", (e) => (dragged = e.target));
+//     ships.appendChild(div);
+//   });
