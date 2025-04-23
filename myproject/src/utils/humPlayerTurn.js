@@ -6,16 +6,20 @@ export const setupHumanPlayerTurn = ({
   callback,
 }) => {
   let click = false;
+
   gameBoard_2.addEventListener("click", (event) => {
+    const cell = event.target.closest(".game-item");
+    if (!cell) return;
     if (!click) {
-      if (
-        arr2[Number(event.target.id)] &&
-        event.target.style.backgroundColor !== "green"
-      ) {
-        event.target.style.backgroundColor = "green";
+      const cellId = Number(event.target.id);
+      console.log(cellId);
+      if (arr2[cellId] && event.target.style.backgroundColor !== "red") {
+        event.target.style.backgroundColor = "red";
         event.target.style.fontSize = "30px";
         aiShips = aiShips - 1;
         console.log({ numbers2: aiShips });
+      } else if (!arr2[cellId]) {
+        event.target.style.backgroundColor = "green";
       }
       click = true;
       if (aiShips === 0) {

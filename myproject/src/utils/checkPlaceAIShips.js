@@ -1,8 +1,9 @@
-export const canRandPlace = (id, length, arr2) => {
+export const canRandPlace = (id, length, arr2, direction) => {
   for (let i = 0; i < length; i++) {
-    const index = id + i;
-    if (index >= 100 || arr2[index] || (id % 10) + length > 10) return false;
-
+    const index = direction === "horizontal" ? id + i : id + i * 10;
+    if (index >= 100 || arr2[index]) {
+      return false; // нельзя разместить корабль
+    }
     const neighbors = [
       index - 1,
       index + 1,

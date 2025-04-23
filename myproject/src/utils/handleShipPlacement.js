@@ -1,6 +1,6 @@
 import { canPlaceShipAt } from "./canPlaceShipAt.js";
 import { checkDeployedShips } from "./checkDeployedShips.js";
-import { isShipRotated } from "../main.js";
+//import { isShipRotated } from "../main.js";
 
 export const handleShipPlacement = (
   cell,
@@ -27,15 +27,12 @@ export const handleShipPlacement = (
     shipList,
     leftBorder,
     rightBorder,
-    isShipRotated,
   );
 
   if (canPlace) {
     for (let i = 0; i < shipLength; i++) {
       // Выбираем следующую ячейку с учетом поворота
-      const nextCellIndex = isShipRotated
-        ? startIndex + i * 10 // вертикально (шаг = 10, т.к. поле 10x10)
-        : startIndex + i; // горизонтально
+      const nextCellIndex = startIndex + i; // горизонтально
 
       const nextCell = gameBoard.children[nextCellIndex];
 
@@ -47,6 +44,6 @@ export const handleShipPlacement = (
 
     checkDeployedShips();
     dragged.parentNode.removeChild(dragged);
-    isShipRotated = false; // сбрасываем поворот после размещения
+    //  isShipRotated = false;
   }
 };

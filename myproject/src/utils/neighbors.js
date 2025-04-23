@@ -21,10 +21,10 @@ export const getNeighbors = (currentCell, isLeftBorder, isRightBorder) => {
       currentCell + 1,
       currentCell - 10,
       currentCell + 10,
-      currentCell - 10 - 1,
-      currentCell - 10 + 1,
-      currentCell + 10 - 1,
-      currentCell + 10 + 1,
+      currentCell - 11,
+      currentCell - 9,
+      currentCell + 9,
+      currentCell + 11,
     ];
   }
 };

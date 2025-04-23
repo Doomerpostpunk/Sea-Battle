@@ -12,8 +12,27 @@ export const placeRandomShips = (arr2, gameBoard_2) => {
     for (let i = 0; i < ship.count; i++) {
       let placed = false;
       while (!placed) {
+        const direction = Math.random() < 0.5 ? "horizontal" : "vertical";
         const startIndex = Math.floor(Math.random() * 100);
-        placed = randPlace(startIndex, ship.length, arr2, gameBoard_2);
+        if (
+          direction === "horizontal" &&
+          (startIndex % 10) + ship.length > 10
+        ) {
+          continue;
+        }
+        if (
+          direction === "vertical" &&
+          startIndex + (ship.length - 1) * 10 >= 100
+        ) {
+          continue;
+        }
+        placed = randPlace(
+          startIndex,
+          ship.length,
+          arr2,
+          gameBoard_2,
+          direction,
+        );
       }
     }
   });

@@ -1,22 +1,24 @@
 import { getNeighbors } from "./neighbors.js";
 import { canPlaceShip } from "./checkingFreePlace.js";
 import { leftBorder } from "./borders.js";
+import { rightBorder } from "./borders.js";
 
 export const canPlaceShipAt = (
   startIndex,
   shipLength,
   gameBoard,
   shipList,
-
-  rightBorder,
-  isShipRotated,
+  //isShipRotated,
 ) => {
+  // console.log(isShipRotated);
+  // if (!isShipRotated) {
   if ((startIndex % 10) + shipLength > 10) {
     return false;
   }
+  //  }
 
   for (let i = 0; i < shipLength; i++) {
-    const cellIndex = isShipRotated ? startIndex + i * 10 : startIndex + i;
+    const cellIndex = startIndex + i;
     const nextCell = gameBoard.children[cellIndex];
     if (
       !nextCell ||
@@ -27,14 +29,23 @@ export const canPlaceShipAt = (
     }
   }
   for (let i = 0; i < shipLength; i++) {
-    const cellIndex = isShipRotated ? startIndex + i * 10 : startIndex + i;
-    const isLeftBorder = leftBorder.includes(cellIndex);
-    const isRightBorder = rightBorder.includes(cellIndex);
+    const cellIndex = startIndex + i;
+    // if (cellIndex === startIndex + i * 10) {
+    //   const neighbors = getNeighbors(cellIndex);
+    //
+    //   if (!canPlaceShip(neighbors, gameBoard, shipList)) {
+    //     return false;
+    //   }
+    // }
+    if (cellIndex === startIndex + i) {
+      const isLeftBorder = leftBorder.includes(cellIndex);
+      const isRightBorder = rightBorder.includes(cellIndex);
 
-    const neighbors = getNeighbors(cellIndex, isLeftBorder, isRightBorder);
+      const neighbors = getNeighbors(cellIndex, isLeftBorder, isRightBorder);
 
-    if (!canPlaceShip(neighbors, gameBoard, shipList)) {
-      return false;
+      if (!canPlaceShip(neighbors, gameBoard, shipList)) {
+        return false;
+      }
     }
   }
   return true;
