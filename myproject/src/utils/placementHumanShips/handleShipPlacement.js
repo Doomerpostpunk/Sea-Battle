@@ -1,5 +1,5 @@
 import { canPlaceShipAt } from "./canPlaceShipAt.js";
-import { checkDeployedShips } from "./checkDeployedShips.js";
+import { checkDeployedShips } from "../startGame/checkDeployedShips.js";
 //import { isShipRotated } from "../main.js";
 
 export const handleShipPlacement = (

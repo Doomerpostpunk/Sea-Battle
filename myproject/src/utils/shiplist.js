@@ -1,4 +1,4 @@
-import { createElement } from "./createEl.js";
+import { createElement } from "./createElement/createEl.js";
 const elem = createElement({
   elem: "div",
   title: "1",

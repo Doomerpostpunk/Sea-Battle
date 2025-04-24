@@ -7,7 +7,7 @@ export const setupHumanPlayerTurn = ({
 }) => {
   let click = false;
 
-  gameBoard_2.addEventListener("click", (event) => {
+  const humPlayerEvent=(event)=>{
     const cell = event.target.closest(".game-item");
     if (!cell) return;
     if (!click) {
@@ -30,5 +30,6 @@ export const setupHumanPlayerTurn = ({
         callback();
       }
     }
-  });
+  }
+  gameBoard_2.addEventListener("click",humPlayerEvent);
 };

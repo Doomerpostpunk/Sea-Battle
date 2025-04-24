@@ -1,4 +1,4 @@
-import { createElement } from "./createEl.js";
+import { createElement } from "../createElement/createEl.js";
 
 export const startGame = createElement({
   elem: "button",

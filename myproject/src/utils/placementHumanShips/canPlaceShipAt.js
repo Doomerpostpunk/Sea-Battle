@@ -1,7 +1,7 @@
-import { getNeighbors } from "./neighbors.js";
+import { getNeighbors } from "../neighbors.js";
 import { canPlaceShip } from "./checkingFreePlace.js";
-import { leftBorder } from "./borders.js";
-import { rightBorder } from "./borders.js";
+import { leftBorder } from "../borders.js";
+import { rightBorder } from "../borders.js";
 
 export const canPlaceShipAt = (
   startIndex,

@@ -1,4 +1,4 @@
-import { randPlace } from "./randPlaceAIShips.js";
+import { checkPlaceAIShips } from "./checkPlaceAIShips.js";
 
 export const placeRandomShips = (arr2, gameBoard_2) => {
   const ships = [
@@ -26,7 +26,7 @@ export const placeRandomShips = (arr2, gameBoard_2) => {
         ) {
           continue;
         }
-        placed = randPlace(
+        placed = checkPlaceAIShips(
           startIndex,
           ship.length,
           arr2,

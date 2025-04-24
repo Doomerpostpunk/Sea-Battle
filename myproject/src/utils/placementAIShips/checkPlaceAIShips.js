@@ -1,6 +1,6 @@
-import { canRandPlace } from "./checkPlaceAIShips.js";
+import { canRandPlace } from "./checkNeighborsAIShips.js";
 
-export const randPlace = (id, length, arr2, gameBoard_2, direction) => {
+export const checkPlaceAIShips = (id, length, arr2, gameBoard_2, direction) => {
   if (canRandPlace(id, length, arr2, direction)) {
     for (let i = 0; i < length; i++) {
       const index = direction === "horizontal" ? id + i : id + i * 10;

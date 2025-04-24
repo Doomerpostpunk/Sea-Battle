@@ -1,4 +1,4 @@
-import { ships } from "./shiplist.js";
+import { ships } from "../shiplist.js";
 import { startGame } from "./startGame.js";
 
 export const checkDeployedShips = () => {

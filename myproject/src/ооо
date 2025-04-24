@@ -1,0 +1,25 @@
+const text=createElement({elem:'h1',title:'SEA BATTLE',className:'loaderText'})
+const loader=createElement({elem:'div',atr:{type:'loader',name:'id'}})
+const image=createElement({elem:'img',atr:{name:'src',type:'https://avatars.dzeninfra.ru/get-zen_doc/1711766/pub_5e22d4803639e600ad0d24b8_5e22d4a8a1bb8700b017b34e/scale_1200'}})
+image.classList.add('image')
+image.style.display='block';
+main_div.style.display='none'
+ships.style.display='none'
+startGame.style.display='none'
+loader.appendChild(image)
+loader.appendChild(text)
+app.appendChild(loader)
+const displayDuration = 1000;
+let elapsedTime = 0;
+
+const intervalId = setInterval(() => {
+  elapsedTime += 100;
+  if (elapsedTime >= displayDuration) {
+    clearInterval(intervalId);
+image.style.display='none';
+text.style.display='none'
+main_div.style.display='flex'
+    ships.style.display='flex'
+    startGame.style.display='block'
+  }
+}, 100); //
