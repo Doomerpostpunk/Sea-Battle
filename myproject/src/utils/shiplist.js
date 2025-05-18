@@ -1,4 +1,5 @@
 import { createElement } from "./createElement/createEl.js";
+
 const elem = createElement({
   elem: "div",
   title: "1",
@@ -91,9 +92,3 @@ shipList2.push(elem7);
 shipList2.push(elem8);
 shipList2.push(elem9);
 shipList2.push(elem10);
-//
-// export const draggedShips = () => {
-//   shipList2.forEach((div) => {
-//     div.addEventListener("dragstart", (e) => (dragged = e.target));
-//     ships.appendChild(div);
-//   });
