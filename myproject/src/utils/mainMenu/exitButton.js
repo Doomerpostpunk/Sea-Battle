@@ -1,10 +1,8 @@
 import { createElement } from "../createElement/createEl.js";
 
 export const exitButton = createElement({
-  elem: "button",
+  elem: "a",
   title: "EXIT",
   className: "exitButton",
-});
-exitButton.addEventListener("click", () => {
-  location.reload();
+  atr: { name: "href", type: "/" },
 });

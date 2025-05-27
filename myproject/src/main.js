@@ -13,6 +13,7 @@ import { aiMove } from "./utils/aiMove.js";
 import { exitButton } from "./utils/mainMenu/exitButton.js";
 import { menuDiv } from "./utils/mainMenu/menuDiv.js";
 import { container } from "./utils/mainMenu/rules.js";
+import { startGameContainer } from "./utils/startGameContainer/startGameContainer.js";
 
 const app = document.getElementById("app");
 const boardList = Array.from({ length: 100 }, (_, index) => index);
@@ -35,9 +36,7 @@ const aiShips = 20;
 let mouseover = false;
 main_div.appendChild(createBoard(boardList, gameBoard_1));
 main_div.appendChild(createBoard(boardList2, gameBoard_2));
-app.appendChild(main_div);
-app.appendChild(menuDiv);
-app.appendChild(container);
+
 //export let isShipRotated = false;
 
 // const handleRotate = (e) => {
@@ -53,8 +52,6 @@ shipList2.forEach((ship) => {
 
   ships.appendChild(ship);
 });
-
-app.appendChild(ships);
 
 // document.addEventListener("keydown", (e) => {
 //   if (e.key === "Enter" && mouseover) {
@@ -84,31 +81,7 @@ gameBoard_1.addEventListener("drop", (e) => {
 });
 
 placeRandomShips(arr2, gameBoard_2);
-const tooltip = createElement({
-  elem: "div",
-  className: "tooltip",
-  title: "Расставьте корабли!",
-});
 
-const startGameContainer = createElement({
-  elem: "div",
-  className: "startGameContainer",
-});
-startGameContainer.appendChild(startGame);
-startGameContainer.appendChild(tooltip);
-startGameContainer.addEventListener("mouseenter", () => {
-  tooltip.style.display = "block";
-  const rect = startGame.getBoundingClientRect();
-  tooltip.style.left = `${rect.left + window.scrollX}px`;
-  tooltip.style.top = `${rect.bottom + window.scrollY}px`;
-});
-
-startGameContainer.addEventListener("mouseleave", () => {
-  tooltip.style.display = "none";
-});
-app.appendChild(ships);
-app.appendChild(startGameContainer);
-app.appendChild(exitButton);
 startGame.addEventListener("click", () => {
   startGame.style.display = "none";
   if (player === "hum") {
@@ -121,3 +94,16 @@ startGame.addEventListener("click", () => {
     });
   }
 });
+if (location.pathname === "/") {
+  app.appendChild(menuDiv);
+}
+if (location.pathname === "/playWithAI") {
+  app.appendChild(main_div);
+  app.appendChild(ships);
+  app.appendChild(startGameContainer);
+  app.appendChild(exitButton);
+}
+if (location.pathname === "/rules") {
+  app.appendChild(container);
+  app.appendChild(exitButton);
+}

@@ -26,7 +26,7 @@ body {
 }
 
 .main-div {
-    display: none;
+    display: flex;
     column-gap: 50px;
     justify-content: center;
     margin-bottom: 100px;
@@ -53,8 +53,9 @@ body {
 }
 
 .ships {
-    display: none;
-    margin-left: 130px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .activeCell {
@@ -73,11 +74,12 @@ body {
 .startGame {
     background: black;
     color: #8f1d1d;
-    border: 1px solid white;
+
     font-size: 30px;
-    margin-left: 680px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 30px;
-    display: none;
+    display: block;
     margin-bottom: 10px;
 }
 
@@ -111,11 +113,14 @@ body {
 .playWithAIButton {
     background-color: #FFD700;
     border: none;
+    font-family: Arial, sans-serif;
     padding: 15px 30px;
     font-size: 1.5em;
     color: #ffffff;
     border-radius: 15px;
     display: block;
+    text-decoration: none;
+    width: 125px;
     margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -137,12 +142,14 @@ body {
 .exitButton {
     background: black;
     color: #f3e105;
-    border: 1px solid white;
+    text-decoration: none;
+
     border-radius: 15px;
     font-size: 30px;
     margin-left: auto;
     margin-right: auto;
-    display: none;
+    display: block;
+    width: 72px
 }
 
 .exitButton:hover {
@@ -151,13 +158,15 @@ body {
 
 .rulesButton {
     background-color: #FFD700;
-    width: 184px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
     border: none;
     padding: 15px 30px;
     font-size: 1.5em;
     color: #ffffff;
     border-radius: 15px;
     display: block;
+    width: 125px;
     margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;

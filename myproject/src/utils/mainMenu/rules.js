@@ -140,4 +140,3 @@ container.appendChild(section3);
 container.appendChild(section4);
 container.appendChild(section5);
 container.appendChild(section6);
-container.style.display = "none";
